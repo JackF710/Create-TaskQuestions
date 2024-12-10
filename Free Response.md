@@ -34,24 +34,6 @@ Programs accept input to achieve their intended functionality. **Describe at lea
 input - takes text that the user inputs through addeventlistener
 
 ```JavaScript
-DOMSelect.submit.addEventListener("click", function () {
-  insertText(DOMSelect.input.childNodes), "paste";
-});
-DOMSelect.fileinput.addEventListener("change", parseFile);
-
-function parseFile() {
-  let fr = new FileReader();
-  fr.onload = function () {
-    const content = fr.result;
-    insertText(content.split("\n"), "file");
-  };
-  fr.readAsText(this.files[0]);
-}
-```
-
-output - changes the text into a correctly formatted version based on the user's preferences through insertadjacenthtml
-
-```JavaScript
 function insertText(inputContent, type) {
   DOMSelect.results.insertAdjacentHTML("beforeend", `<br></br>`);
   const content = inputContent;
@@ -69,12 +51,47 @@ function insertText(inputContent, type) {
         `<p class="text">${item.textContent}</p>`
       );
     });
-    DOMSelect.input.innerHTML = "";
-  }
-  DOMSelect.inputbox.style.display = "none";
-  DOMSelect.settings.style.display = "";
+        DOMSelect.input.innerHTML = "";
+  };
+};
+```
+
+Butter
+
+```Javascript
+function retrieveFeelingQuote(category) {
+  DOMSelectors.mainOutput.innerHTML = ""; //Gets rid of previous current quote
+  $.ajax({
+    method: "GET",
+    url: "https://api.api-ninjas.com/v1/quotes?category=" + category,
+    headers: { "X-Api-Key": "e83S07p6GaMOgL3Tbp4W7g==SzjBmXqoFLEGxuow" },
+    contentType: "application/json",
+    success: function (result) {
+      console.log("Retrieved Quote:", result); //Check: Quote Retrieval
+      const quoteObject = {
+        author: result[0].author,
+        quote: result[0].quote,
+        category: category,
+      };
+      quoteHistory.push(quoteObject); //Quote added to long term storage (History)
+      console.log("History of Quotes:", quoteHistory); //Check to see if in long term
+      quoteCurrent.length = 0; //Empty quoteCurrent
+      quoteCurrent.push(quoteObject); //Quote added to short term storage (Current Quote)
+      // Display the quote on the page
+      console.log("Current Quote:", quoteCurrent); //Check to see if current quote works
+      for (let i = 0; i < quoteCurrent.length; i++) {
+        const quote = quoteCurrent[i];
+        createQuoteCard(quote);
+      }
+    },
+    error: function ajaxError(jqXHR) {
+      console.error("Error: ", jqXHR.responseText);
+    },
+  });
 }
 ```
+
+creates a card for the quote
 
 ### Question 2
 
@@ -112,12 +129,26 @@ function insertText(inputContent, type) {
 }
 ```
 
+```Javascript
+const displayHistory = function () {
+  DOMSelectors.mainOutput.innerHTML = ""; // Clear previous quote
+  for (let i = 0; i < quoteHistory.length; i++) {
+    const quote = quoteHistory[i];
+    createQuoteCard(quote);
+  }
+};
+```
+
 #### Part (b):
 
 Consider the procedure identified in part (i) of the Procedure section of your Personalized Project Reference.
 
 - Write two calls to your procedure that each cause a different code segment in the procedure to execute.
 - Describe the expected behavior of each call. If it is not possible for two calls to your procedure to cause different code segments to execute, explain why this is the case for your procedure.
+
+```Javascript
+
+```
 
 #### Part (c):
 
